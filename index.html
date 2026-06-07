@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCP AI Studio | Plugin Home</title>
+    <meta name="description" content="Connect, inspect, and operate any Streamable HTTP MCP server — from a browser tab, VS Code, Windsurf, or a Chrome extension." />
+    <link rel="icon" type="image/svg+xml" href="public/assets/mcp_logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #050b1b;
+        --chrome: #090f22;
+        --chrome-strong: #111d3a;
+        --surface: #0c1530;
+        --surface-soft: #080f27;
+        --line: #182040;
+        --line-strong: #253260;
+        --text: #eaf2ff;
+        --muted: #a9bfeb;
+        --muted-strong: #d4e3ff;
+        --mcp-gradient: linear-gradient(135deg, #26f5ff 0%, #1573ff 35%, #8d35ff 70%, #ff2ccf 100%);
+        --mcp-glow: rgba(21, 115, 255, 0.22);
+        --metal-text: linear-gradient(180deg, #ffffff 0%, #cfe0ff 42%, #7ea4d8 70%, #e8f2ff 100%);
+        --metal-muted: linear-gradient(180deg, #dce9ff 0%, #9ab5e0 55%, #6888b0 100%);
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html, body {
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .site-wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* ── Header ── */
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0 16px;
+        border-bottom: 1px solid var(--line);
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .logo-img {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        background: var(--mcp-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        letter-spacing: -0.01em;
+      }
+
+      .top-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-shrink: 0;
+      }
+
+      .top-links a {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 150ms;
+      }
+
+      .top-links a:hover { color: var(--text); }
+
+      /* ── Hero ── */
+      .hero {
+        padding: 64px 0 48px;
+        max-width: 700px;
+      }
+
+      .hero h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(28px, 5vw, 42px);
+        font-weight: 700;
+        line-height: 1.18;
+        letter-spacing: -0.03em;
+        background: var(--metal-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 18px;
+      }
+
+      .hero h1 .accent {
+        background: var(--mcp-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .hero p {
+        font-size: 16px;
+        line-height: 1.65;
+        color: var(--muted);
+        margin-bottom: 28px;
+        max-width: 580px;
+      }
+
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        background: var(--mcp-gradient);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: opacity 150ms, transform 100ms;
+        box-shadow: 0 2px 20px var(--mcp-glow);
+      }
+
+      .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+      .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 18px;
+        background: transparent;
+        border: 1px solid var(--line-strong);
+        color: var(--muted-strong);
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: border-color 150ms, color 150ms;
+      }
+
+      .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+      .release-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px;
+        background: rgba(21, 115, 255, 0.1);
+        border: 1px solid rgba(21, 115, 255, 0.3);
+        border-radius: 20px;
+        font-size: 12px;
+        color: #7eb8ff;
+        margin-bottom: 28px;
+        width: fit-content;
+      }
+
+      .release-badge a { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+      /* ── Cards grid ── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+        margin-bottom: 40px;
+      }
+
+      .card {
+        background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 28px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: border-color 180ms, box-shadow 180ms;
+      }
+
+      .card:hover {
+        border-color: var(--line-strong);
+        box-shadow: 0 4px 32px var(--mcp-glow);
+      }
+
+      .card-icon {
+        font-size: 26px;
+        line-height: 1;
+        margin-bottom: 2px;
+      }
+
+      .card-badge {
+        display: inline-flex;
+        width: fit-content;
+        padding: 3px 9px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        background: rgba(21, 115, 255, 0.12);
+        border: 1px solid rgba(21, 115, 255, 0.28);
+        color: #7eb8ff;
+      }
+
+      .card-badge.teal {
+        background: rgba(38, 245, 255, 0.08);
+        border-color: rgba(38, 245, 255, 0.22);
+        color: #26f5ff;
+      }
+
+      .card-badge.neutral {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: var(--muted);
+      }
+
+      .card h2 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        background: var(--metal-text);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        letter-spacing: -0.02em;
+      }
+
+      .card p {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--muted);
+        flex: 1;
+      }
+
+      .card-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        background: var(--mcp-gradient);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 7px;
+        text-decoration: none;
+        width: fit-content;
+        margin-top: 6px;
+        transition: opacity 150ms;
+      }
+
+      .card-cta:hover { opacity: 0.85; }
+
+      .card-cta.secondary {
+        background: none;
+        color: var(--muted-strong);
+        border: 1px solid var(--line-strong);
+        padding: 8px 15px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .card-cta.secondary:hover { border-color: var(--muted); color: var(--text); }
+
+      .code-box {
+        background: var(--surface-soft);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #26f5ff;
+        word-break: break-all;
+        margin-top: 4px;
+      }
+
+      /* ── Features ── */
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 28px;
+        padding: 24px 0 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .feature-item .check {
+        display: inline-flex;
+        width: 18px;
+        height: 18px;
+        align-items: center;
+        justify-content: center;
+        background: rgba(21, 115, 255, 0.14);
+        border-radius: 50%;
+        color: #7eb8ff;
+        font-size: 11px;
+        flex-shrink: 0;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: var(--metal-muted);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 16px;
+      }
+
+      /* ── Footer ── */
+      .site-footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .site-footer p { font-size: 12px; color: var(--line-strong); }
+
+      .site-footer nav { display: flex; gap: 16px; }
+
+      .site-footer a {
+        font-size: 12px;
+        color: var(--line-strong);
+        text-decoration: none;
+        transition: color 150ms;
+      }
+
+      .site-footer a:hover { color: var(--muted); }
+
+      @media (max-width: 540px) {
+        .site-header { flex-wrap: wrap; }
+        .hero { padding: 40px 0 32px; }
+        .grid { grid-template-columns: 1fr; }
+        .hero-actions { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="site-wrap">
+
+      <header class="site-header">
+        <a class="brand" href="/">
+          <img class="logo-img" src="public/assets/mcp_logo.svg" alt="" aria-hidden="true" />
+          <span class="brand-name">MCP AI Studio</span>
+        </a>
+        <nav class="top-links" aria-label="Primary links">
+          <a href="https://github.com/harishkaparwan/mcp-ai-studio-web" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://marketplace.visualstudio.com/items?itemName=harishkaparwan.mcp-ai-studio" target="_blank" rel="noopener noreferrer">Marketplace</a>
+          <a href="https://open-vsx.org/extension/harishkaparwan/mcp-ai-studio" target="_blank" rel="noopener noreferrer">Open VSX</a>
+          <a href="public/policy/privacy.html">Privacy</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div class="release-badge">
+          🚀 Extension v0.2.6 Released &nbsp;·&nbsp;
+          <a href="https://marketplace.visualstudio.com/items?itemName=harishkaparwan.mcp-ai-studio" target="_blank" rel="noopener noreferrer">Install now</a>
+        </div>
+        <h1>Connect, inspect, and operate any <span class="accent">MCP server</span> from anywhere.</h1>
+        <p>MCP AI Studio is a zero-dependency workbench for Streamable HTTP MCP servers. Discover tools, call them with auto-generated forms, inspect responses, and configure everything from the UI — in VS Code, Windsurf, a browser, or a Chrome extension.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="https://marketplace.visualstudio.com/items?itemName=harishkaparwan.mcp-ai-studio" target="_blank" rel="noopener noreferrer">
+            Install VS Code Extension
+          </a>
+          <a class="btn-ghost" href="https://open-vsx.org/extension/harishkaparwan/mcp-ai-studio" target="_blank" rel="noopener noreferrer">
+            Open VSX / Windsurf
+          </a>
+          <a class="btn-ghost" href="app/" target="_blank" rel="noopener noreferrer">
+            Open Web App
+          </a>
+        </div>
+      </section>
+
+      <p class="section-label">Available on</p>
+      <div class="grid" aria-label="Product options">
+
+        <article class="card">
+          <div class="card-icon">🧩</div>
+          <div class="card-badge">Recommended</div>
+          <h2>VS Code &amp; Windsurf</h2>
+          <p>Full sidebar workbench natively inside your editor. Point it at any MCP server URL, discover tools, and run calls — zero server changes required.</p>
+          <a class="card-cta" href="https://marketplace.visualstudio.com/items?itemName=harishkaparwan.mcp-ai-studio" target="_blank" rel="noopener noreferrer">
+            Install from Marketplace
+          </a>
+          <a class="card-cta secondary" href="https://open-vsx.org/extension/harishkaparwan/mcp-ai-studio" target="_blank" rel="noopener noreferrer">
+            Also on Open VSX
+          </a>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-badge teal">Web App</div>
+          <h2>Browser Workbench</h2>
+          <p>Run MCP AI Studio directly in your browser. Full tool discovery, call execution with JSON Schema forms, and formatted response inspection — no install needed.</p>
+          <a class="card-cta" href="app/" target="_blank" rel="noopener noreferrer">
+            Open Web Workbench
+          </a>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🔵</div>
+          <div class="card-badge neutral">Chrome</div>
+          <h2>Chrome Extension</h2>
+          <p>Persistent side panel that follows you across tabs. Pre-configure your MCP endpoint and branding before building for your team.</p>
+          <div class="code-box">chrome://extensions → Load unpacked<br />→ chrome-extension/build/</div>
+          <a class="card-cta secondary" href="https://github.com/harishkaparwan/mcp-ai-studio" target="_blank" rel="noopener noreferrer">
+            Build from Source
+          </a>
+        </article>
+
+      </div>
+
+      <div class="features" aria-label="Highlights">
+        <div class="feature-item"><span class="check">✓</span> 100% free &amp; open source</div>
+        <div class="feature-item"><span class="check">✓</span> Connect to any Streamable HTTP MCP server</div>
+        <div class="feature-item"><span class="check">✓</span> Auto-generated forms from JSON Schema</div>
+        <div class="feature-item"><span class="check">✓</span> Formatted JSON response inspector</div>
+        <div class="feature-item"><span class="check">✓</span> Configurable via settings, URL params, or env vars</div>
+        <div class="feature-item"><span class="check">✓</span> Works in VS Code, Windsurf, browser &amp; Chrome</div>
+      </div>
+
+      <footer class="site-footer">
+        <p>© 2025 MCP AI Studio · harishkaparwan</p>
+        <nav>
+          <a href="https://github.com/harishkaparwan/mcp-ai-studio-web" target="_blank" rel="noopener noreferrer">Source</a>
+          <a href="public/policy/privacy.html">Privacy Policy</a>
+          <a href="https://marketplace.visualstudio.com/items?itemName=harishkaparwan.mcp-ai-studio" target="_blank" rel="noopener noreferrer">Marketplace</a>
+        </nav>
+      </footer>
+
+    </main>
+  </body>
+</html>
